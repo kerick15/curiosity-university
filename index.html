@@ -5,814 +5,2111 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Curiosity University — It's Alive!</title>
+
 <style>
 *{box-sizing:border-box}
-html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#030303;color:#eee;font-family:"Courier New",monospace}
+html,body{
+  margin:0;width:100%;height:100%;overflow:hidden;
+  background:#030303;color:#eee;font-family:"Courier New",monospace
+}
 button,select,textarea{font-family:inherit}
 button{cursor:pointer}
 button:disabled{cursor:not-allowed}
-.scene{position:fixed;inset:0;display:none;align-items:center;justify-content:center;overflow:hidden;background:#030303}
+
+.scene{
+  position:fixed;inset:0;display:none;
+  align-items:center;justify-content:center;
+  overflow:hidden;background:#030303
+}
 .scene.active{display:flex}
 
-/* WELCOME SCREEN */
+/* WELCOME */
 #welcomeScreen{
-position:fixed;inset:0;z-index:500;display:flex;
-align-items:center;justify-content:center;
-background:rgba(0,0,0,.73);
-backdrop-filter:blur(3px)
+  position:fixed;inset:0;z-index:500;display:flex;
+  align-items:center;justify-content:center;
+  background:rgba(0,0,0,.77);
+  backdrop-filter:blur(3px)
 }
 #welcomeScreen.hidden{display:none}
 .welcome-panel{
-width:min(440px,88vw);padding:30px 25px;
-background:#c0c0c0;color:#111;
-border:4px outset white;
-box-shadow:12px 12px 0 rgba(0,0,0,.7);
-text-align:center
+  width:min(460px,90vw);padding:30px 25px;
+  background:#c0c0c0;color:#111;
+  border:4px outset white;
+  box-shadow:12px 12px 0 rgba(0,0,0,.7);
+  text-align:center
 }
-.welcome-heading{background:#000080;color:white;padding:9px;margin:-25px -20px 23px;font-weight:bold}
-.welcome-panel h1{font-size:clamp(20px,3vw,30px);margin:10px 0}
-.welcome-panel p{font-family:Arial,sans-serif;font-size:14px;line-height:1.5}
+.welcome-heading{
+  background:#000080;color:white;
+  padding:9px;margin:-25px -20px 23px;
+  font-weight:bold
+}
+.welcome-panel h1{
+  font-size:clamp(20px,3vw,30px);margin:10px 0
+}
+.welcome-panel p{
+  font-family:Arial,sans-serif;
+  font-size:14px;line-height:1.5
+}
 #enterHallButton{
-margin-top:15px;padding:14px 24px;
-background:#ffdc41;color:#211900;
-border:4px outset #fff1a2;
-font-size:17px;font-weight:bold;
-box-shadow:0 0 16px rgba(255,202,35,.35)
+  margin-top:15px;padding:14px 24px;
+  background:#ffdc41;color:#211900;
+  border:4px outset #fff1a2;
+  font-size:17px;font-weight:bold;
+  box-shadow:0 0 16px rgba(255,202,35,.35)
 }
 #enterHallButton:hover{background:#ffea77}
 
 /* HALL */
-#hallStage{position:relative;width:min(100vw,177.7778vh);aspect-ratio:16/9;overflow:hidden;transform-origin:50% 50%;transition:transform 1s ease,filter .8s}
-#hallStage.approach{transform:scale(2.7);filter:brightness(.55)}
-#hallImage{position:absolute;inset:0;width:100%;height:100%;object-fit:fill;pointer-events:none}
-.door-hotspot,.egg-hotspot{position:absolute;border:0;background:transparent;padding:0;z-index:5}
+#hallStage{
+  position:relative;
+  width:min(100vw,177.7778vh);
+  aspect-ratio:16/9;
+  overflow:hidden;
+  transform-origin:50% 50%;
+  transition:transform 1s ease,filter .8s
+}
+#hallStage.approach{
+  transform:scale(2.7);
+  filter:brightness(.55)
+}
+#hallImage{
+  position:absolute;inset:0;
+  width:100%;height:100%;
+  object-fit:fill;pointer-events:none
+}
+.door-hotspot,.egg-hotspot{
+  position:absolute;border:0;
+  background:transparent;padding:0;z-index:5
+}
 #algebraDoor{left:9.6%;top:34%;width:14.3%;height:46%}
 #writingDoor{left:27.6%;top:34%;width:12.5%;height:46%}
 #ethicsDoor{left:59.8%;top:34%;width:13%;height:46%}
 #psychDoor{left:78.7%;top:34%;width:13%;height:46%}
-.door-glow{position:absolute;left:20%;top:5%;width:61%;height:50%;opacity:0;pointer-events:none;background:radial-gradient(ellipse,rgba(255,246,197,.95),rgba(255,192,71,.65) 45%,transparent 80%);box-shadow:0 0 38px rgba(255,174,42,.8);mix-blend-mode:screen;transition:opacity .2s}
-.door-hotspot:hover .door-glow,.door-hotspot:focus-visible .door-glow{opacity:.9}
-.door-hotspot:focus-visible,.egg-hotspot:focus-visible{outline:2px dashed #ffe18b}
-.room-lamp{position:absolute;width:22px;height:22px;transform:translate(-50%,-50%);z-index:6;pointer-events:none}
-.room-lamp:before{content:"";position:absolute;inset:3px 0;border-radius:50%;background:#302a22;border:1px solid #73654c}
-.room-lamp:after{content:"";position:absolute;left:5px;top:5px;width:12px;height:12px;border-radius:50%;background:#5a4830}
-.room-lamp.completed:after{background:radial-gradient(circle at 30% 25%,#fff,#70ff95 35%,#12b84c 80%);box-shadow:0 0 10px #62ff91,0 0 24px #28e66a,0 0 42px rgba(38,245,95,.6)}
+.door-glow{
+  position:absolute;left:20%;top:5%;
+  width:61%;height:50%;opacity:0;
+  pointer-events:none;
+  background:radial-gradient(
+    ellipse,
+    rgba(255,246,197,.95),
+    rgba(255,192,71,.65) 45%,
+    transparent 80%
+  );
+  box-shadow:0 0 38px rgba(255,174,42,.8);
+  mix-blend-mode:screen;
+  transition:opacity .2s
+}
+.door-hotspot:hover .door-glow,
+.door-hotspot:focus-visible .door-glow{opacity:.9}
+.door-hotspot:focus-visible,
+.egg-hotspot:focus-visible{
+  outline:2px dashed #ffe18b
+}
+.room-lamp{
+  position:absolute;width:22px;height:22px;
+  transform:translate(-50%,-50%);
+  z-index:6;pointer-events:none
+}
+.room-lamp:before{
+  content:"";position:absolute;inset:3px 0;
+  border-radius:50%;background:#302a22;
+  border:1px solid #73654c
+}
+.room-lamp:after{
+  content:"";position:absolute;
+  left:5px;top:5px;width:12px;height:12px;
+  border-radius:50%;background:#5a4830
+}
+.room-lamp.completed:after{
+  background:radial-gradient(
+    circle at 30% 25%,
+    #fff,#70ff95 35%,#12b84c 80%
+  );
+  box-shadow:
+    0 0 10px #62ff91,
+    0 0 24px #28e66a,
+    0 0 42px rgba(38,245,95,.6)
+}
 #lampAlgebra{left:17.4%;top:30.1%}
 #lampWriting{left:34.1%;top:33.1%}
 #lampEthics{left:67%;top:33.4%}
 #lampPsych{left:84.5%;top:31.1%}
-#collectiveEnergy{position:absolute;left:49.25%;top:67.4%;transform:translate(-50%,-50%);z-index:8;color:#74ff99;font-size:clamp(17px,2vw,35px);font-weight:bold;text-shadow:0 0 7px #2fff69;pointer-events:none}
-#ambienceToggle{position:absolute;top:2%;left:1.5%;z-index:12;padding:7px 10px;border:2px outset #999;background:#bcbcbc;color:#111;font-size:clamp(9px,.8vw,13px);font-weight:bold}
 
-/* EASTER EGG HOTSPOTS */
+/* Shared energy stays in the Hall */
+#collectiveEnergy{
+  position:absolute;
+  left:49.25%;top:67.4%;
+  transform:translate(-50%,-50%);
+  z-index:8;
+  color:#74ff99;
+  font-size:clamp(17px,2vw,35px);
+  font-weight:bold;
+  text-shadow:0 0 7px #2fff69;
+  pointer-events:none
+}
+#energyStatus{
+  position:absolute;
+  left:50%;top:76%;
+  transform:translateX(-50%);
+  z-index:8;
+  color:#e9ffed;
+  font:clamp(8px,.8vw,12px) Arial,sans-serif;
+  text-shadow:0 1px 5px #000;
+  text-align:center;
+  pointer-events:none;
+  white-space:nowrap
+}
+#ambienceToggle{
+  position:absolute;top:2%;left:1.5%;
+  z-index:12;padding:7px 10px;
+  border:2px outset #999;
+  background:#bcbcbc;color:#111;
+  font-size:clamp(9px,.8vw,13px);
+  font-weight:bold
+}
+
+/* EASTER EGGS */
 #clockEgg{left:11.5%;top:12%;width:8%;height:19%;border-radius:50%}
 #computerEgg{left:89%;top:58%;width:10%;height:22%}
 #pumpkinEgg{left:43.6%;top:35%;width:12%;height:16%;border-radius:50%}
 #webEgg{left:21%;top:1%;width:17%;height:15%}
 #coffeeEgg{left:8%;top:80%;width:8%;height:15%;border-radius:35%}
 
-#pumpkinFlash{position:absolute;left:43.6%;top:34%;width:12%;height:17%;border-radius:50%;z-index:4;pointer-events:none;opacity:0;background:radial-gradient(circle,rgba(255,220,75,.8),rgba(255,107,0,.45),transparent 75%);mix-blend-mode:screen}
-#pumpkinFlash.flash{animation:hallPumpkinFlash .65s 3}
-@keyframes hallPumpkinFlash{0%,100%{opacity:0}50%{opacity:1}}
+#pumpkinFlash{
+  position:absolute;left:43.6%;top:34%;
+  width:12%;height:17%;border-radius:50%;
+  z-index:4;pointer-events:none;opacity:0;
+  background:radial-gradient(
+    circle,
+    rgba(255,220,75,.8),
+    rgba(255,107,0,.45),
+    transparent 75%
+  );
+  mix-blend-mode:screen
+}
+#pumpkinFlash.flash{
+  animation:hallPumpkinFlash .65s 3
+}
+@keyframes hallPumpkinFlash{
+  0%,100%{opacity:0}
+  50%{opacity:1}
+}
 
-#clockHands{position:absolute;left:15.55%;top:21.6%;width:5.4%;height:9.6%;z-index:7;pointer-events:none;opacity:0}
-#clockHands.spinning{opacity:.8;animation:clockSpin 1.7s ease-in-out}
-#clockHands:before,#clockHands:after{content:"";position:absolute;left:50%;bottom:50%;transform-origin:bottom center;background:#171613;box-shadow:0 0 1px #eee}
-#clockHands:before{width:2px;height:35%;transform:rotate(20deg)}
-#clockHands:after{width:2px;height:24%;transform:rotate(90deg)}
-@keyframes clockSpin{from{transform:rotate(0)}to{transform:rotate(-1080deg)}}
+#clockHands{
+  position:absolute;
+  left:15.55%;top:21.6%;
+  width:5.4%;height:9.6%;
+  z-index:7;pointer-events:none;opacity:0
+}
+#clockHands.spinning{
+  opacity:.8;
+  animation:clockSpin 1.7s ease-in-out
+}
+#clockHands:before,#clockHands:after{
+  content:"";position:absolute;
+  left:50%;bottom:50%;
+  transform-origin:bottom center;
+  background:#171613;
+  box-shadow:0 0 1px #eee
+}
+#clockHands:before{
+  width:2px;height:35%;
+  transform:rotate(20deg)
+}
+#clockHands:after{
+  width:2px;height:24%;
+  transform:rotate(90deg)
+}
+@keyframes clockSpin{
+  from{transform:rotate(0)}
+  to{transform:rotate(-1080deg)}
+}
 
-/* MORE VISIBLE SPIDER */
+/* NEW SPIDER — recognizable eight legs, eyes, smile */
 #spider{
-position:absolute;z-index:15;
-left:35%;top:4%;
-width:25px;height:27px;
-opacity:0;pointer-events:none;
-filter:drop-shadow(0 0 4px rgba(255,255,255,.8))
+  position:absolute;
+  left:35%;top:4%;
+  width:clamp(55px,8vw,110px);
+  aspect-ratio:1.75;
+  z-index:15;
+  opacity:0;
+  pointer-events:none;
+  filter:drop-shadow(0 0 5px rgba(255,255,255,.65))
 }
-#spider:before{
-content:"";position:absolute;left:7px;top:6px;
-width:15px;height:17px;
-background:radial-gradient(circle at 35% 30%,#d2d2ca,#777970 55%,#343732);
-border:1px solid #e2e2d7;border-radius:50%;
-box-shadow:0 0 7px rgba(255,255,255,.65)
+#spider svg{
+  display:block;
+  width:100%;height:100%;
+  overflow:visible
 }
-#spider:after{
-content:"";position:absolute;left:-8px;top:8px;
-width:42px;height:13px;
-border-top:3px solid #b8bbb3;
-border-bottom:3px solid #b8bbb3;
-transform:rotate(12deg);
-filter:drop-shadow(0 0 2px #fff)
+#spider.scurry{
+  animation:spiderScurry 2.6s ease-in-out forwards
 }
-#spider.scurry{animation:spiderScurry 2.6s ease-in-out forwards}
 @keyframes spiderScurry{
-0%{opacity:0;transform:translate(0,0) rotate(-12deg)}
-8%{opacity:1}
-45%{opacity:1;transform:translate(-25vw,16vh) rotate(12deg)}
-85%{opacity:1}
-100%{opacity:0;transform:translate(-65vw,60vh) rotate(-18deg)}
+  0%{
+    opacity:0;
+    transform:translate(0,0) rotate(-12deg)
+  }
+  8%{opacity:1}
+  45%{
+    opacity:1;
+    transform:translate(-25vw,16vh) rotate(12deg)
+  }
+  85%{opacity:1}
+  100%{
+    opacity:0;
+    transform:translate(-65vw,60vh) rotate(-18deg)
+  }
 }
 
 /* DOOR TRANSITION */
 #doorTransition{background:#080604}
-#transitionStage{position:relative;height:min(94vh,900px);aspect-ratio:2/3;perspective:1500px;transition:transform 1s ease}
-#doorBackground,#doorPanel,#doorFrame{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;pointer-events:none}
+#transitionStage{
+  position:relative;
+  height:min(94vh,900px);
+  aspect-ratio:2/3;
+  perspective:1500px;
+  transition:transform 1s ease
+}
+#doorBackground,#doorPanel,#doorFrame{
+  position:absolute;inset:0;
+  width:100%;height:100%;
+  object-fit:contain;pointer-events:none
+}
 #doorBackground{z-index:1}
-#doorPanel{z-index:2;transform-origin:80% 50%;transform:rotateY(0);transition:transform 1.7s cubic-bezier(.45,.03,.21,1)}
-#transitionStage.open #doorPanel{transform:rotateY(78deg)}
+#doorPanel{
+  z-index:2;
+  transform-origin:80% 50%;
+  transform:rotateY(0);
+  transition:transform 1.7s cubic-bezier(.45,.03,.21,1)
+}
+#transitionStage.open #doorPanel{
+  transform:rotateY(78deg)
+}
 #doorFrame{z-index:4}
-#lightSpill{position:absolute;left:40%;top:10%;width:48%;height:78%;z-index:3;opacity:0;pointer-events:none;background:radial-gradient(ellipse at left,rgba(255,184,78,.65),rgba(255,123,32,.2),transparent 75%);filter:blur(12px);transition:opacity 1.2s}
+#lightSpill{
+  position:absolute;
+  left:40%;top:10%;
+  width:48%;height:78%;
+  z-index:3;opacity:0;
+  pointer-events:none;
+  background:radial-gradient(
+    ellipse at left,
+    rgba(255,184,78,.65),
+    rgba(255,123,32,.2),
+    transparent 75%
+  );
+  filter:blur(12px);
+  transition:opacity 1.2s
+}
 #transitionStage.open #lightSpill{opacity:1}
 #transitionStage.push{transform:scale(1.5)}
-#transitionCaption{position:absolute;z-index:8;bottom:1%;left:0;width:100%;text-align:center;letter-spacing:2px;color:#f6ddba;font-size:clamp(11px,1vw,15px);text-shadow:0 2px 5px #000}
-#transitionFade{position:absolute;inset:0;background:#000;opacity:0;z-index:20;pointer-events:none;transition:opacity .5s}
+#transitionCaption{
+  position:absolute;
+  z-index:8;bottom:1%;left:0;
+  width:100%;text-align:center;
+  letter-spacing:2px;color:#f6ddba;
+  font-size:clamp(11px,1vw,15px);
+  text-shadow:0 2px 5px #000
+}
+#transitionFade{
+  position:absolute;inset:0;
+  background:#000;opacity:0;
+  z-index:20;pointer-events:none;
+  transition:opacity .5s
+}
 #transitionFade.visible{opacity:1}
 
 /* ROOM MONITOR */
-#roomStage{position:relative;width:min(100vw,150vh);aspect-ratio:3/2;overflow:hidden}
-#roomFrameImage{position:absolute;inset:0;width:100%;height:100%;object-fit:fill;pointer-events:none}
-#monitor{position:absolute;left:11.6%;top:7.7%;width:76.7%;height:73.2%;overflow:hidden;border-radius:2% / 2%;background:#c0c0c0;color:#080808}
-.win-titlebar{height:6%;min-height:25px;background:#000080;color:white;display:flex;align-items:center;justify-content:space-between;padding:3px 8px;font-size:clamp(10px,.95vw,16px);font-weight:bold}
-.win-title-text{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.win-controls{display:flex;gap:3px;flex-shrink:0}
-.fake-control{display:inline-flex;align-items:center;justify-content:center;width:21px;height:19px;color:#111;background:#c0c0c0;border:2px outset white;font-size:11px}
-.monitor-main{height:84%;padding:7px;display:grid;grid-template-columns:minmax(0,44fr) minmax(0,56fr);gap:7px;background:#b8b8b8;overflow:hidden}
-.column{min-width:0;min-height:0;overflow:auto;scrollbar-width:thin;scrollbar-color:#888 #c0c0c0}
-.win-panel{margin-bottom:6px;background:#f4f4f4;border:2px outset white}
-.panel-title{padding:5px 8px;background:#001fa4;color:white;font-size:clamp(10px,.85vw,15px);font-weight:bold}
-.panel-body{padding:8px 10px;background:#f5f5f5;color:#070707;font-family:Arial,sans-serif;font-size:clamp(10px,.8vw,14px);line-height:1.31}
+#roomStage{
+  position:relative;
+  width:min(100vw,150vh);
+  aspect-ratio:3/2;
+  overflow:hidden
+}
+#roomFrameImage{
+  position:absolute;inset:0;
+  width:100%;height:100%;
+  object-fit:fill;pointer-events:none
+}
+#monitor{
+  position:absolute;
+  left:11.6%;top:7.7%;
+  width:76.7%;height:73.2%;
+  overflow:hidden;
+  border-radius:2% / 2%;
+  background:#c0c0c0;color:#080808
+}
+.win-titlebar{
+  height:6%;min-height:25px;
+  background:#000080;color:white;
+  display:flex;align-items:center;
+  justify-content:space-between;
+  padding:3px 8px;
+  font-size:clamp(10px,.95vw,16px);
+  font-weight:bold
+}
+.win-title-text{
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap
+}
+.win-controls{
+  display:flex;gap:3px;flex-shrink:0
+}
+.fake-control{
+  display:inline-flex;
+  align-items:center;justify-content:center;
+  width:21px;height:19px;
+  color:#111;background:#c0c0c0;
+  border:2px outset white;font-size:11px
+}
+.monitor-main{
+  height:84%;padding:7px;
+  display:grid;
+  grid-template-columns:minmax(0,44fr) minmax(0,56fr);
+  gap:7px;background:#b8b8b8;overflow:hidden
+}
+.column{
+  min-width:0;min-height:0;overflow:auto;
+  scrollbar-width:thin;
+  scrollbar-color:#888 #c0c0c0
+}
+.win-panel{
+  margin-bottom:6px;
+  background:#f4f4f4;
+  border:2px outset white
+}
+.panel-title{
+  padding:5px 8px;
+  background:#001fa4;color:white;
+  font-size:clamp(10px,.85vw,15px);
+  font-weight:bold
+}
+.panel-body{
+  padding:8px 10px;
+  background:#f5f5f5;color:#070707;
+  font-family:Arial,sans-serif;
+  font-size:clamp(10px,.8vw,14px);
+  line-height:1.31
+}
 .panel-body p{margin:5px 0 8px}
-.course-header{margin-bottom:6px;border:2px inset white}
-.course-title{padding:9px 11px;background:#1a203c;color:#fff;font-size:clamp(13px,1.25vw,22px);font-weight:bold}
-.course-prof{padding:6px 11px;background:#f1f1f1;color:#111;font-size:clamp(11px,.9vw,16px)}
+.course-header{
+  margin-bottom:6px;
+  border:2px inset white
+}
+.course-title{
+  padding:9px 11px;
+  background:#1a203c;color:#fff;
+  font-size:clamp(13px,1.25vw,22px);
+  font-weight:bold
+}
+.course-prof{
+  padding:6px 11px;
+  background:#f1f1f1;color:#111;
+  font-size:clamp(11px,.9vw,16px)
+}
 .challenge{font-weight:bold;color:#00004a}
-.old-button{padding:6px 10px;min-height:32px;border:2px outset white;background:#c0c0c0;color:#111;font-size:clamp(10px,.75vw,13px);font-weight:bold}
+.old-button{
+  padding:6px 10px;min-height:32px;
+  border:2px outset white;
+  background:#c0c0c0;color:#111;
+  font-size:clamp(10px,.75vw,13px);
+  font-weight:bold
+}
 .old-button:active{border-style:inset}
 .left-actions{text-align:right;margin-bottom:5px}
 
 /* GENERATOR */
-.generator-inner{height:clamp(105px,18vh,190px);display:grid;grid-template-columns:52% 48%;background:#151715;border:3px inset #777}
-.pumpkin-zone{position:relative;display:flex;align-items:center;justify-content:center;overflow:hidden;background:radial-gradient(circle,#52321c,#17120d 58%,#070706);border-right:2px solid #4c473b}
-.pipe{position:absolute;top:12%;height:76%;width:13px;background:linear-gradient(90deg,#302719,#806842,#332718);border:2px solid #17130f;border-radius:5px}
-.pipe.left{left:12%}.pipe.right{right:12%}
-#pumpkin{position:relative;z-index:3;font-size:clamp(43px,6vw,105px);filter:grayscale(1) brightness(.4);transition:filter .4s,transform .4s,text-shadow .4s}
-#pumpkin.level1{filter:brightness(.85);transform:scale(1.05);text-shadow:0 0 16px #ff8c27}
-#pumpkin.level2{filter:brightness(1.15);text-shadow:0 0 18px #ff9b22,0 0 43px #ff6500;animation:pumpkinPulse 1.2s infinite}
-#pumpkin.level3{filter:brightness(1.5);text-shadow:0 0 22px #fff5a0,0 0 50px #ff8900,0 0 78px #ff4a00;animation:overload .42s infinite}
-@keyframes pumpkinPulse{50%{transform:scale(1.12)}}
-@keyframes overload{0%,100%{transform:scale(1.08) rotate(-1deg)}50%{transform:scale(1.16) rotate(1deg)}}
-.spark{display:none;position:absolute;z-index:4;width:4px;height:19px;background:#f0ffff;box-shadow:0 0 9px #a1edff;transform:rotate(35deg)}
-.spark.one{left:31%;top:20%}.spark.two{right:26%;top:27%;transform:rotate(-40deg)}.spark.three{left:37%;bottom:16%;transform:rotate(65deg)}
-.pumpkin-zone.overload .spark{display:block;animation:sparkFlash .3s steps(2) infinite}
-@keyframes sparkFlash{0%{opacity:0}50%{opacity:1}100%{opacity:.1}}
-.gauge-side{padding:5px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;background:#161b18;color:#eee}
-.gauge-label{font-size:clamp(9px,.75vw,13px);letter-spacing:1px}
-.gauge{position:relative;width:155px;max-width:100%;height:82px;overflow:hidden}
-.gauge-wheel{position:absolute;left:50%;bottom:-76px;width:152px;height:152px;transform:translateX(-50%);border-radius:50%;border:5px solid #282828;background:conic-gradient(from 270deg,#bd2225 0deg,#dc491f 40deg,#e98e20 82deg,#e4c02b 117deg,#a5bc3b 146deg,#32a850 180deg,#222 180deg)}
-.gauge-mask{position:absolute;left:50%;bottom:-47px;width:94px;height:94px;transform:translateX(-50%);border-radius:50%;background:#191919}
-#needle{position:absolute;left:calc(50% - 2px);bottom:0;width:4px;height:63px;background:#f5f5f5;transform-origin:50% 100%;transform:rotate(-72deg);z-index:3;transition:transform .6s}
-.gauge-pin{position:absolute;left:50%;bottom:-6px;width:15px;height:15px;transform:translateX(-50%);border-radius:50%;background:#ddd;border:2px solid #333;z-index:4}
-#roomEnergy{font-size:clamp(10px,.8vw,14px);font-weight:bold}
-#doorStatus{margin-top:3px;color:#ff6963;font-size:clamp(9px,.75vw,12px);font-weight:bold}
+.generator-inner{
+  height:clamp(105px,18vh,190px);
+  display:grid;
+  grid-template-columns:52% 48%;
+  background:#151715;
+  border:3px inset #777
+}
+.pumpkin-zone{
+  position:relative;
+  display:flex;align-items:center;justify-content:center;
+  overflow:hidden;
+  background:radial-gradient(
+    circle,#52321c,#17120d 58%,#070706
+  );
+  border-right:2px solid #4c473b
+}
+.pipe{
+  position:absolute;top:12%;
+  height:76%;width:13px;
+  background:linear-gradient(
+    90deg,#302719,#806842,#332718
+  );
+  border:2px solid #17130f;
+  border-radius:5px
+}
+.pipe.left{left:12%}
+.pipe.right{right:12%}
+#pumpkin{
+  position:relative;z-index:3;
+  font-size:clamp(43px,6vw,105px);
+  filter:grayscale(1) brightness(.4);
+  transition:filter .4s,transform .4s,text-shadow .4s
+}
+#pumpkin.level1{
+  filter:brightness(.85);
+  transform:scale(1.05);
+  text-shadow:0 0 16px #ff8c27
+}
+#pumpkin.level2{
+  filter:brightness(1.15);
+  text-shadow:
+    0 0 18px #ff9b22,
+    0 0 43px #ff6500;
+  animation:pumpkinPulse 1.2s infinite
+}
+#pumpkin.level3{
+  filter:brightness(1.5);
+  text-shadow:
+    0 0 22px #fff5a0,
+    0 0 50px #ff8900,
+    0 0 78px #ff4a00;
+  animation:overload .42s infinite
+}
+@keyframes pumpkinPulse{
+  50%{transform:scale(1.12)}
+}
+@keyframes overload{
+  0%,100%{transform:scale(1.08) rotate(-1deg)}
+  50%{transform:scale(1.16) rotate(1deg)}
+}
+.spark{
+  display:none;position:absolute;z-index:4;
+  width:4px;height:19px;
+  background:#f0ffff;
+  box-shadow:0 0 9px #a1edff;
+  transform:rotate(35deg)
+}
+.spark.one{left:31%;top:20%}
+.spark.two{
+  right:26%;top:27%;
+  transform:rotate(-40deg)
+}
+.spark.three{
+  left:37%;bottom:16%;
+  transform:rotate(65deg)
+}
+.pumpkin-zone.overload .spark{
+  display:block;
+  animation:sparkFlash .3s steps(2) infinite
+}
+@keyframes sparkFlash{
+  0%{opacity:0}
+  50%{opacity:1}
+  100%{opacity:.1}
+}
+.gauge-side{
+  padding:5px;display:flex;
+  flex-direction:column;
+  align-items:center;justify-content:center;
+  text-align:center;
+  background:#161b18;color:#eee
+}
+.gauge-label{
+  font-size:clamp(9px,.75vw,13px);
+  letter-spacing:1px
+}
+.gauge{
+  position:relative;
+  width:155px;max-width:100%;
+  height:82px;overflow:hidden
+}
+.gauge-wheel{
+  position:absolute;
+  left:50%;bottom:-76px;
+  width:152px;height:152px;
+  transform:translateX(-50%);
+  border-radius:50%;
+  border:5px solid #282828;
+  background:conic-gradient(
+    from 270deg,
+    #bd2225 0deg,
+    #dc491f 40deg,
+    #e98e20 82deg,
+    #e4c02b 117deg,
+    #a5bc3b 146deg,
+    #32a850 180deg,
+    #222 180deg
+  )
+}
+.gauge-mask{
+  position:absolute;
+  left:50%;bottom:-47px;
+  width:94px;height:94px;
+  transform:translateX(-50%);
+  border-radius:50%;background:#191919
+}
+#needle{
+  position:absolute;
+  left:calc(50% - 2px);
+  bottom:0;width:4px;height:63px;
+  background:#f5f5f5;
+  transform-origin:50% 100%;
+  transform:rotate(-72deg);
+  z-index:3;
+  transition:transform .6s
+}
+.gauge-pin{
+  position:absolute;
+  left:50%;bottom:-6px;
+  width:15px;height:15px;
+  transform:translateX(-50%);
+  border-radius:50%;
+  background:#ddd;border:2px solid #333;
+  z-index:4
+}
+#roomEnergy{
+  font-size:clamp(10px,.8vw,14px);
+  font-weight:bold
+}
+#doorStatus{
+  margin-top:3px;color:#ff6963;
+  font-size:clamp(9px,.75vw,12px);
+  font-weight:bold
+}
 #doorStatus.unlocked{color:#89f29a}
 
 /* MOVES */
-.move-tabs{display:flex;gap:3px;margin-bottom:7px}
-.move-tab{flex:1;min-height:34px;padding:4px;background:#aaa;color:#333;border:2px outset white;font-size:clamp(10px,.8vw,13px);font-weight:bold}
-.move-tab.active{background:#f3f3f3;color:#000080}
-.move-tab.submitted{background:#d7ead9;color:#166a26}
+.move-tabs{
+  display:flex;gap:3px;margin-bottom:7px
+}
+.move-tab{
+  flex:1;min-height:34px;padding:4px;
+  background:#aaa;color:#333;
+  border:2px outset white;
+  font-size:clamp(10px,.8vw,13px);
+  font-weight:bold
+}
+.move-tab.active{
+  background:#f3f3f3;color:#000080
+}
+.move-tab.submitted{
+  background:#d7ead9;color:#166a26
+}
 .move-pane{display:none}
 .move-pane.active{display:block}
-.move-form label{display:block;margin:5px 0 3px;font-family:Arial,sans-serif;font-size:clamp(11px,.82vw,14px);font-weight:bold}
-.move-form select,.move-form textarea{width:100%;padding:7px;background:white;color:#050505;border:2px inset #ddd;font-size:clamp(12px,.9vw,15px)}
-.move-form textarea{height:clamp(65px,10vh,95px);resize:none;line-height:1.3;vertical-align:top}
-.move-form select:disabled,.move-form textarea:disabled{background:#e4e4e4;color:#555}
-.character-count{text-align:right;font-size:10px;color:#333;margin-top:2px}
+.move-form label{
+  display:block;margin:5px 0 3px;
+  font-family:Arial,sans-serif;
+  font-size:clamp(11px,.82vw,14px);
+  font-weight:bold
+}
+.move-form select,.move-form textarea{
+  width:100%;padding:7px;
+  background:white;color:#050505;
+  border:2px inset #ddd;
+  font-size:clamp(12px,.9vw,15px)
+}
+.move-form textarea{
+  height:clamp(65px,10vh,95px);
+  resize:none;line-height:1.3;
+  vertical-align:top
+}
+.move-form select:disabled,
+.move-form textarea:disabled{
+  background:#e4e4e4;color:#555
+}
+.character-count{
+  text-align:right;font-size:10px;
+  color:#333;margin-top:2px
+}
 
 /* FOOTER */
-.monitor-footer{height:10%;min-height:45px;display:grid;grid-template-columns:32% minmax(0,1fr) 25%;gap:7px;align-items:center;padding:5px 8px;background:#c0c0c0;border-top:2px solid #777}
-#reviveButton{width:100%;height:100%;min-height:40px;border:4px outset #c1b99a;background:#968e72;color:#55503e;font-size:clamp(14px,1.3vw,24px);font-weight:bold;letter-spacing:1px}
-#reviveButton.ready{background:#ffdc41;color:#211900;border-color:#fff1a2;box-shadow:0 0 13px rgba(255,202,35,.6)}
+.monitor-footer{
+  height:10%;min-height:45px;
+  display:grid;
+  grid-template-columns:32% minmax(0,1fr) 25%;
+  gap:7px;align-items:center;
+  padding:5px 8px;
+  background:#c0c0c0;
+  border-top:2px solid #777
+}
+#reviveButton{
+  width:100%;height:100%;min-height:40px;
+  border:4px outset #c1b99a;
+  background:#968e72;color:#55503e;
+  font-size:clamp(14px,1.3vw,24px);
+  font-weight:bold;letter-spacing:1px
+}
+#reviveButton.ready{
+  background:#ffdc41;color:#211900;
+  border-color:#fff1a2;
+  box-shadow:0 0 13px rgba(255,202,35,.6)
+}
 #reviveButton.ready:hover{background:#ffea77}
-#footerMessage{font-family:Arial,sans-serif;font-size:clamp(9px,.75vw,13px);line-height:1.2;color:#111}
-#persistentHallButton{display:none;width:100%;min-height:39px}
+#footerMessage{
+  font-family:Arial,sans-serif;
+  font-size:clamp(9px,.75vw,13px);
+  line-height:1.2;color:#111
+}
+#persistentHallButton{
+  display:none;width:100%;min-height:39px
+}
 #persistentHallButton.visible{display:block}
 
 /* POPUPS */
-.popup-overlay{position:absolute;inset:0;z-index:100;display:none;align-items:center;justify-content:center;background:rgba(0,0,0,.7)}
+.popup-overlay{
+  position:absolute;inset:0;z-index:100;
+  display:none;align-items:center;justify-content:center;
+  background:rgba(0,0,0,.7)
+}
 .popup-overlay.show{display:flex}
-.popup{width:min(520px,72%);max-height:85%;overflow:auto;background:#c0c0c0;color:#111;border:4px outset white;box-shadow:10px 10px 0 rgba(0,0,0,.5)}
-.popup-title{padding:7px 9px;background:#000080;color:white;font-weight:bold;display:flex;align-items:center;justify-content:space-between;gap:8px}
-.popup-close{width:25px;height:23px;border:2px outset white;background:#c0c0c0;color:#111;font-weight:bold}
-.popup-content{padding:18px;text-align:center;font:14px/1.4 Arial,sans-serif}
-.popup-content h2{color:#166223;margin:0 0 10px}
-.popup-actions{display:flex;justify-content:center;gap:8px;flex-wrap:wrap;margin-top:15px}
+.popup{
+  width:min(520px,72%);
+  max-height:85%;overflow:auto;
+  background:#c0c0c0;color:#111;
+  border:4px outset white;
+  box-shadow:10px 10px 0 rgba(0,0,0,.5)
+}
+.popup-title{
+  padding:7px 9px;
+  background:#000080;color:white;
+  font-weight:bold;
+  display:flex;align-items:center;
+  justify-content:space-between;gap:8px
+}
+.popup-close{
+  width:25px;height:23px;
+  border:2px outset white;
+  background:#c0c0c0;color:#111;
+  font-weight:bold
+}
+.popup-content{
+  padding:18px;text-align:center;
+  font:14px/1.4 Arial,sans-serif
+}
+.popup-content h2{
+  color:#166223;margin:0 0 10px
+}
+.popup-actions{
+  display:flex;justify-content:center;
+  gap:8px;flex-wrap:wrap;margin-top:15px
+}
 #reviewPopup .popup-content{text-align:left}
 #reviewPopup strong{color:#000080}
 
-#eggPopup{position:fixed;inset:0;z-index:200;display:none;align-items:center;justify-content:center;background:rgba(0,0,0,.5)}
+#eggPopup{
+  position:fixed;inset:0;z-index:200;
+  display:none;align-items:center;justify-content:center;
+  background:rgba(0,0,0,.5)
+}
 #eggPopup.show{display:flex}
-#eggWindow{width:min(450px,88vw);background:#c0c0c0;border:4px outset white;box-shadow:12px 12px 0 #000;color:#111}
-#eggText{min-height:90px;padding:27px 18px;text-align:center;font:bold clamp(16px,2vw,23px) "Courier New",monospace}
-.delayed-line{display:block;color:#00802d;font-size:clamp(20px,2.6vw,30px);margin-top:12px;opacity:0;transition:opacity .2s}
+#eggWindow{
+  width:min(450px,88vw);
+  background:#c0c0c0;
+  border:4px outset white;
+  box-shadow:12px 12px 0 #000;
+  color:#111
+}
+#eggText{
+  min-height:90px;padding:27px 18px;
+  text-align:center;
+  font:bold clamp(16px,2vw,23px) "Courier New",monospace
+}
+.delayed-line{
+  display:block;color:#00802d;
+  font-size:clamp(20px,2.6vw,30px);
+  margin-top:12px;opacity:0;
+  transition:opacity .2s
+}
 .delayed-line.visible{opacity:1}
 
 @media(max-height:650px){
-.panel-body{padding:5px 7px}
-.course-title{padding:5px 8px}
-.generator-inner{height:105px}
-.move-form textarea{height:65px}
+  .panel-body{padding:5px 7px}
+  .course-title{padding:5px 8px}
+  .generator-inner{height:105px}
+  .move-form textarea{height:65px}
 }
 @media(prefers-reduced-motion:reduce){
-#hallStage,#doorPanel,#transitionStage,#needle,#pumpkin{transition:none!important;animation:none!important}
+  #hallStage,#doorPanel,#transitionStage,
+  #needle,#pumpkin{
+    transition:none!important;
+    animation:none!important
+  }
 }
 </style>
 </head>
+
 <body>
 
 <!-- AUDIO -->
-<audio id="hallAmbience" src="bedroom-ambience-with-wall-clock-1900.wav" loop preload="auto"></audio>
-<audio id="clickSound" src="game-click-1114.wav" preload="auto"></audio>
-<audio id="doorCreak" src="scary-wooden-door-opening-190.wav" preload="auto"></audio>
-<audio id="airWhoosh" src="air-woosh-1489.wav" preload="auto"></audio>
-<audio id="roomEntry" src="opening-software-interface-2578.wav" preload="auto"></audio>
-<audio id="generatorSound" src="electrical-whoosh.wav" preload="auto"></audio>
-<audio id="scaryLaugh" src="mixkit-troll-warrior-laugh-409.wav" preload="auto"></audio>
+<audio id="hallAmbience"
+  src="bedroom-ambience-with-wall-clock-1900.wav"
+  loop preload="auto"></audio>
+<audio id="clickSound"
+  src="game-click-1114.wav"
+  preload="auto"></audio>
+<audio id="doorCreak"
+  src="scary-wooden-door-opening-190.wav"
+  preload="auto"></audio>
+<audio id="airWhoosh"
+  src="air-woosh-1489.wav"
+  preload="auto"></audio>
+<audio id="roomEntry"
+  src="opening-software-interface-2578.wav"
+  preload="auto"></audio>
+<audio id="generatorSound"
+  src="electrical-whoosh.wav"
+  preload="auto"></audio>
+<audio id="scaryLaugh"
+  src="mixkit-troll-warrior-laugh-409.wav"
+  preload="auto"></audio>
 
 <!-- HALL -->
 <section id="hallScene" class="scene active">
-<div id="hallStage">
-<img id="hallImage" src="curiosity-hall.png" alt="Curiosity Hall">
+  <div id="hallStage">
+    <img id="hallImage"
+      src="curiosity-hall.png"
+      alt="Curiosity Hall">
 
-<button id="ambienceToggle" type="button">⏸ Pause Ambience</button>
+    <button id="ambienceToggle" type="button">
+      ⏸ Pause Ambience
+    </button>
 
-<button id="algebraDoor" class="door-hotspot" data-room="ahmed" aria-label="Enter College Algebra"><span class="door-glow"></span></button>
-<button id="writingDoor" class="door-hotspot" data-room="vargas" aria-label="Enter Writing and Rhetoric"><span class="door-glow"></span></button>
-<button id="ethicsDoor" class="door-hotspot" data-room="reynolds" aria-label="Enter Ethics and Social Responsibility"><span class="door-glow"></span></button>
-<button id="psychDoor" class="door-hotspot" data-room="lin" aria-label="Enter Psychology"><span class="door-glow"></span></button>
+    <button id="algebraDoor"
+      class="door-hotspot"
+      data-room="ahmed"
+      aria-label="Enter College Algebra">
+      <span class="door-glow"></span>
+    </button>
 
-<div id="lampAlgebra" class="room-lamp"></div>
-<div id="lampWriting" class="room-lamp"></div>
-<div id="lampEthics" class="room-lamp"></div>
-<div id="lampPsych" class="room-lamp"></div>
-<div id="collectiveEnergy" aria-label="Curiosity Moves submitted">0</div>
+    <button id="writingDoor"
+      class="door-hotspot"
+      data-room="vargas"
+      aria-label="Enter Writing and Rhetoric">
+      <span class="door-glow"></span>
+    </button>
 
-<button id="clockEgg" class="egg-hotspot" aria-label="Investigate the clock"></button>
-<button id="computerEgg" class="egg-hotspot" aria-label="Investigate the old computer"></button>
-<button id="pumpkinEgg" class="egg-hotspot" aria-label="Investigate the pumpkin"></button>
-<button id="webEgg" class="egg-hotspot" aria-label="Investigate the cobwebs"></button>
-<button id="coffeeEgg" class="egg-hotspot" aria-label="Investigate the coffee cup"></button>
+    <button id="ethicsDoor"
+      class="door-hotspot"
+      data-room="reynolds"
+      aria-label="Enter Ethics and Social Responsibility">
+      <span class="door-glow"></span>
+    </button>
 
-<div id="clockHands"></div>
-<div id="pumpkinFlash"></div>
-<div id="spider"></div>
-</div>
+    <button id="psychDoor"
+      class="door-hotspot"
+      data-room="lin"
+      aria-label="Enter Psychology">
+      <span class="door-glow"></span>
+    </button>
+
+    <div id="lampAlgebra" class="room-lamp"></div>
+    <div id="lampWriting" class="room-lamp"></div>
+    <div id="lampEthics" class="room-lamp"></div>
+    <div id="lampPsych" class="room-lamp"></div>
+
+    <div id="collectiveEnergy"
+      aria-label="Collective Curiosity Moves submitted">—</div>
+    <div id="energyStatus">Connecting collective energy...</div>
+
+    <button id="clockEgg"
+      class="egg-hotspot"
+      aria-label="Investigate the clock"></button>
+    <button id="computerEgg"
+      class="egg-hotspot"
+      aria-label="Investigate the old computer"></button>
+    <button id="pumpkinEgg"
+      class="egg-hotspot"
+      aria-label="Investigate the pumpkin"></button>
+    <button id="webEgg"
+      class="egg-hotspot"
+      aria-label="Investigate the cobwebs"></button>
+    <button id="coffeeEgg"
+      class="egg-hotspot"
+      aria-label="Investigate the coffee cup"></button>
+
+    <div id="clockHands"></div>
+    <div id="pumpkinFlash"></div>
+
+    <!-- Cartoon spider based on the supplied image -->
+    <div id="spider" aria-hidden="true">
+      <svg viewBox="0 0 220 125"
+        xmlns="http://www.w3.org/2000/svg">
+
+        <!-- Four legs on the left -->
+        <g fill="none"
+          stroke="#080808"
+          stroke-width="15"
+          stroke-linecap="round"
+          stroke-linejoin="round">
+          <path d="M88 39 Q64 10 35 15 Q15 15 8 31"/>
+          <path d="M79 53 Q47 29 24 48 Q9 60 5 75"/>
+          <path d="M78 72 Q42 58 20 79 Q9 90 15 106"/>
+          <path d="M91 88 Q66 84 53 106 L45 120"/>
+
+          <!-- Four legs on the right -->
+          <path d="M133 38 Q151 2 181 8 Q202 9 210 26"/>
+          <path d="M145 51 Q176 26 198 44 Q212 54 216 69"/>
+          <path d="M145 70 Q179 57 197 77 Q208 88 204 105"/>
+          <path d="M133 89 Q158 84 171 103 L179 119"/>
+        </g>
+
+        <!-- Body -->
+        <ellipse cx="111" cy="65"
+          rx="57" ry="51"
+          fill="#353535"/>
+
+        <!-- Eyes -->
+        <ellipse cx="91" cy="59"
+          rx="18" ry="20" fill="#fff"/>
+        <ellipse cx="130" cy="54"
+          rx="18" ry="20" fill="#fff"/>
+        <ellipse cx="94" cy="64"
+          rx="9" ry="11" fill="#000"/>
+        <ellipse cx="133" cy="59"
+          rx="9" ry="11" fill="#000"/>
+
+        <!-- Smile -->
+        <path d="M106 87 Q119 100 133 83"
+          fill="none"
+          stroke="#999"
+          stroke-width="2.5"
+          stroke-linecap="round"/>
+      </svg>
+    </div>
+  </div>
 </section>
 
 <!-- WELCOME -->
 <div id="welcomeScreen">
-<div class="welcome-panel">
-<div class="welcome-heading">CURIOSITY UNIVERSITY</div>
-<h1>IT'S ALIVE!</h1>
-<p>The university's curiosity is fading. Four courses need your help.</p>
-<p>Explore the Hall, investigate the rooms, and bring curiosity back to life.</p>
-<button id="enterHallButton">Enter Curiosity Hall</button>
-</div>
+  <div class="welcome-panel">
+    <div class="welcome-heading">CURIOSITY UNIVERSITY</div>
+    <h1>IT'S ALIVE!</h1>
+    <p>
+      The university's curiosity is fading.
+      Four courses need your help.
+    </p>
+    <p>
+      Explore the Hall, investigate the rooms,
+      and bring curiosity back to life.
+    </p>
+    <p>
+      Your Curiosity Moves will be collected
+      for workshop facilitators to review.
+      The Hall shows everyone's combined progress,
+      not individual written responses.
+    </p>
+    <button id="enterHallButton">
+      Enter Curiosity Hall
+    </button>
+  </div>
 </div>
 
 <!-- DOOR TRANSITION -->
 <section id="doorTransition" class="scene">
-<div id="transitionStage">
-<img id="doorBackground" src="door-background.png" alt="">
-<img id="doorPanel" src="ahmed-door-panel.png" alt="">
-<div id="lightSpill"></div>
-<img id="doorFrame" src="door-frame.png" alt="">
-<div id="transitionCaption">THE DOOR IS OPENING...</div>
-</div>
-<div id="transitionFade"></div>
+  <div id="transitionStage">
+    <img id="doorBackground"
+      src="door-background.png" alt="">
+    <img id="doorPanel"
+      src="ahmed-door-panel.png" alt="">
+    <div id="lightSpill"></div>
+    <img id="doorFrame"
+      src="door-frame.png" alt="">
+    <div id="transitionCaption">
+      THE DOOR IS OPENING...
+    </div>
+  </div>
+  <div id="transitionFade"></div>
 </section>
 
 <!-- ROOM -->
 <section id="roomScene" class="scene">
-<div id="roomStage">
-<img id="roomFrameImage" src="room-monitor.png" alt="Old Curiosity University computer monitor">
+  <div id="roomStage">
+    <img id="roomFrameImage"
+      src="room-monitor.png"
+      alt="Old Curiosity University computer monitor">
 
-<div id="monitor">
-<div class="win-titlebar">
-<span class="win-title-text">Curiosity University :: Course-Recovery Terminal</span>
-<div class="win-controls"><span class="fake-control">_</span><span class="fake-control">□</span><span class="fake-control">×</span></div>
-</div>
+    <div id="monitor">
+      <div class="win-titlebar">
+        <span class="win-title-text">
+          Curiosity University :: Course-Recovery Terminal
+        </span>
+        <div class="win-controls">
+          <span class="fake-control">_</span>
+          <span class="fake-control">□</span>
+          <span class="fake-control">×</span>
+        </div>
+      </div>
 
-<div class="monitor-main">
-<div class="column">
-<div class="course-header">
-<div id="courseTitle" class="course-title"></div>
-<div id="courseProfessor" class="course-prof"></div>
-</div>
-<div class="win-panel"><div class="panel-title">WHAT'S WORKING</div><div id="workingText" class="panel-body"></div></div>
-<div class="win-panel"><div class="panel-title">WHAT'S NOT</div><div id="notWorkingText" class="panel-body"></div></div>
-<div class="win-panel"><div class="panel-title">THE CURIOSITY CHALLENGE</div><div id="challengeText" class="panel-body"></div></div>
-<div class="left-actions"><button id="reviewButton" class="old-button">? Quick Review: Curiosity Types</button></div>
-</div>
+      <div class="monitor-main">
+        <div class="column">
+          <div class="course-header">
+            <div id="courseTitle" class="course-title"></div>
+            <div id="courseProfessor" class="course-prof"></div>
+          </div>
 
-<div class="column">
-<div class="win-panel">
-<div class="panel-title">CURIOSITY GENERATOR</div>
-<div class="generator-inner">
-<div id="pumpkinZone" class="pumpkin-zone">
-<div class="pipe left"></div><div class="pipe right"></div>
-<span id="pumpkin">🎃</span>
-<span class="spark one"></span><span class="spark two"></span><span class="spark three"></span>
-</div>
-<div class="gauge-side">
-<div class="gauge-label">CURIOSITY LEVEL</div>
-<div class="gauge">
-<div class="gauge-wheel"></div><div class="gauge-mask"></div>
-<div id="needle"></div><div class="gauge-pin"></div>
-</div>
-<div id="roomEnergy">ENERGY: 0 / 3</div>
-<div id="doorStatus">DOOR: LOCKED</div>
-</div>
-</div>
-</div>
+          <div class="win-panel">
+            <div class="panel-title">WHAT'S WORKING</div>
+            <div id="workingText" class="panel-body"></div>
+          </div>
 
-<div class="win-panel">
-<div class="panel-title">YOUR CURIOSITY MOVE</div>
-<div class="panel-body">
-<div id="moveTabs" class="move-tabs"></div>
-<div id="movePanes"></div>
-</div>
-</div>
-</div>
-</div>
+          <div class="win-panel">
+            <div class="panel-title">WHAT'S NOT</div>
+            <div id="notWorkingText" class="panel-body"></div>
+          </div>
 
-<div class="monitor-footer">
-<button id="reviveButton" disabled>REVIVE!</button>
-<div id="footerMessage">Complete one Curiosity Move to unlock the room.</div>
-<button id="persistentHallButton" class="old-button">← Curiosity Hall</button>
-</div>
-</div>
+          <div class="win-panel">
+            <div class="panel-title">
+              THE CURIOSITY CHALLENGE
+            </div>
+            <div id="challengeText" class="panel-body"></div>
+          </div>
 
-<div id="successPopup" class="popup-overlay">
-<div class="popup">
-<div class="popup-title">CURIOSITY RESTORED!</div>
-<div class="popup-content">
-<h2>It's Alive!</h2>
-<p id="successMessage"></p>
-<div class="popup-actions">
-<button id="addAnotherButton" class="old-button">Add Another Move</button>
-<button id="successHallButton" class="old-button">Return to Curiosity Hall</button>
-</div>
-</div>
-</div>
-</div>
+          <div class="left-actions">
+            <button id="reviewButton" class="old-button">
+              ? Quick Review: Curiosity Types
+            </button>
+          </div>
+        </div>
 
-<div id="reviewPopup" class="popup-overlay">
-<div class="popup">
-<div class="popup-title">Curiosity Types <button id="closeReview" class="popup-close" aria-label="Close">×</button></div>
-<div class="popup-content">
-<p><strong>Perceptual:</strong> Spark interest through something surprising, unusual, or sensory.</p>
-<p><strong>Divergent:</strong> Invite possibilities, alternatives, and imaginative thinking.</p>
-<p><strong>Empathic:</strong> Encourage curiosity about other people's experiences and perspectives.</p>
-<p><strong>Epistemic:</strong> Create a desire to investigate, understand, and learn more.</p>
-</div>
-</div>
-</div>
-</div>
+        <div class="column">
+          <div class="win-panel">
+            <div class="panel-title">
+              CURIOSITY GENERATOR
+            </div>
+            <div class="generator-inner">
+              <div id="pumpkinZone" class="pumpkin-zone">
+                <div class="pipe left"></div>
+                <div class="pipe right"></div>
+                <span id="pumpkin">🎃</span>
+                <span class="spark one"></span>
+                <span class="spark two"></span>
+                <span class="spark three"></span>
+              </div>
+
+              <div class="gauge-side">
+                <div class="gauge-label">
+                  CURIOSITY LEVEL
+                </div>
+                <div class="gauge">
+                  <div class="gauge-wheel"></div>
+                  <div class="gauge-mask"></div>
+                  <div id="needle"></div>
+                  <div class="gauge-pin"></div>
+                </div>
+                <div id="roomEnergy">ENERGY: 0 / 3</div>
+                <div id="doorStatus">DOOR: LOCKED</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="win-panel">
+            <div class="panel-title">
+              YOUR CURIOSITY MOVE
+            </div>
+            <div class="panel-body">
+              <div id="moveTabs" class="move-tabs"></div>
+              <div id="movePanes"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="monitor-footer">
+        <button id="reviveButton" disabled>REVIVE!</button>
+        <div id="footerMessage">
+          Complete one Curiosity Move to unlock the room.
+        </div>
+        <button id="persistentHallButton" class="old-button">
+          ← Curiosity Hall
+        </button>
+      </div>
+    </div>
+
+    <div id="successPopup" class="popup-overlay">
+      <div class="popup">
+        <div class="popup-title">CURIOSITY RESTORED!</div>
+        <div class="popup-content">
+          <h2>It's Alive!</h2>
+          <p id="successMessage"></p>
+          <div class="popup-actions">
+            <button id="addAnotherButton" class="old-button">
+              Add Another Move
+            </button>
+            <button id="successHallButton" class="old-button">
+              Return to Curiosity Hall
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="reviewPopup" class="popup-overlay">
+      <div class="popup">
+        <div class="popup-title">
+          Curiosity Types
+          <button id="closeReview"
+            class="popup-close"
+            aria-label="Close">×</button>
+        </div>
+        <div class="popup-content">
+          <p>
+            <strong>Perceptual:</strong>
+            Spark interest through something surprising,
+            unusual, or sensory.
+          </p>
+          <p>
+            <strong>Divergent:</strong>
+            Invite possibilities, alternatives,
+            and imaginative thinking.
+          </p>
+          <p>
+            <strong>Empathic:</strong>
+            Encourage curiosity about other people's
+            experiences and perspectives.
+          </p>
+          <p>
+            <strong>Epistemic:</strong>
+            Create a desire to investigate,
+            understand, and learn more.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
 </section>
 
 <!-- EASTER EGG POPUP -->
-<div id="eggPopup" role="dialog" aria-modal="true" aria-label="Curiosity Hall surprise">
-<div id="eggWindow">
-<div class="popup-title">
-<span id="eggTitle">Curiosity University — System Message</span>
-<button id="closeEgg" class="popup-close" aria-label="Close surprise">×</button>
-</div>
-<div id="eggText"></div>
-</div>
+<div id="eggPopup"
+  role="dialog"
+  aria-modal="true"
+  aria-label="Curiosity Hall surprise">
+  <div id="eggWindow">
+    <div class="popup-title">
+      <span id="eggTitle">
+        Curiosity University — System Message
+      </span>
+      <button id="closeEgg"
+        class="popup-close"
+        aria-label="Close surprise">×</button>
+    </div>
+    <div id="eggText"></div>
+  </div>
 </div>
 
 <script>
 "use strict";
 
-const $=id=>document.getElementById(id);
-const wait=ms=>new Promise(resolve=>setTimeout(resolve,ms));
+/* ==================================================
+   SUPABASE CONNECTION
+   ================================================== */
 
-const rooms={
-ahmed:{
-title:"ROOM 1 :: COLLEGE ALGEBRA",
-professor:"College Algebra · Professor Ahmed",
-workingTitle:"Strong Scaffolding",
-working:"Professor Ahmed has built a highly structured course with short videos, guided examples, interactive problems, and practice quizzes. Students have clear support for working through each new concept.",
-notTitle:"Students' Perception of Their Math Abilities",
-not:"Many students enter the course already convinced they're “not math people.” They speed through videos, skip practice, and jump straight to quizzes. The work that could help them build confidence and ability is the very work they don't want to do.",
-challenge:"Keep the support students need—but how can you make them WANT to work through the learning that helps them become “math people”?",
-question:"How could you use perceptual, divergent, empathic, or epistemic curiosity to make students want to engage with the math?",
-lamp:"lampAlgebra"
-},
-vargas:{
-title:"ROOM 2 :: WRITING & RHETORIC",
-professor:"Research and Rhetoric · Dr. Vargas",
-workingTitle:"Thoughtful AI Integration",
-working:"Dr. Vargas has designed assignments that use generative AI rather than ban it. Students analyze AI-generated drafts, critique its reasoning, and consider where AI-generated writing—and their own writing—could be stronger.",
-notTitle:"Students Aren't Building Their Own Writing Skills",
-not:"Many students still use AI to generate polished essays, make a few changes, and submit them. They're producing finished writing without doing enough of the writing themselves to build their ability to craft and construct sentences that argue, explain, interpret, question, and communicate complex ideas.",
-challenge:"We are all writers in progress. How can Dr. Vargas make students WANT to learn and practice the craft of writing—while still keeping AI in the picture?",
-question:"How could you use perceptual, divergent, empathic, or epistemic curiosity to help students become more curious about what makes writing work, what doesn't, and how both their writing and AI-generated writing can be revised to communicate more clearly and thoughtfully?",
-lamp:"lampWriting"
-},
-reynolds:{
-title:"ROOM 3 :: ETHICS & SOCIAL RESPONSIBILITY",
-professor:"Ethics and Social Responsibility · Dr. Reynolds",
-workingTitle:"Multiple Perspectives",
-working:"Dr. Reynolds asks students to examine contemporary issues through competing ethical frameworks. Readings and case studies present multiple perspectives, and discussions are designed to encourage reflection rather than debate.",
-notTitle:"Strong Reactions Are Shutting Down Inquiry",
-not:"Some students perceive the course as biased or disengage when they encounter ideas that conflict with their own views. Instead of becoming more interested in why people see an issue differently, they may withdraw from the conversation or focus only on completing the factual work.",
-challenge:"Keep the complexity—but how can you make students WANT to stay curious when an idea challenges what they already think or believe?",
-question:"How could you use perceptual, divergent, empathic, or epistemic curiosity to help students become curious about different perspectives while continuing to examine and develop their own?",
-lamp:"lampEthics"
-},
-lin:{
-title:"ROOM 4 :: INTRODUCTION TO PSYCHOLOGY",
-professor:"Introduction to Psychology · Professor Lin",
-workingTitle:"A Strong, Engaging Course",
-working:"Professor Lin inherited a well-designed asynchronous psychology course. Students engage with interesting examples, cases, and activities that connect concepts like perception, memory, decision-making, and social behavior to their own lives.",
-notTitle:"The Discussion Board",
-not:"The course requires a weekly discussion, and it's a ghost town for curiosity. Students answer the prompt, make the required replies, and move on. Posts and responses are predictable and boring for everyone involved.",
-challenge:"The weekly discussion has to stay—but the way students experience it can change. How can Lin make the discussion something students WANT to enter and return to—or, at the very least, make it less boring for everyone (including Lin)?",
-question:"How could you use perceptual, divergent, empathic, or epistemic curiosity—and the psychology content itself—to create discussions that generate responses worth reading, thinking about, and responding to?",
-lamp:"lampPsych"
-}
+const SUPABASE_URL =
+  "https://jxsrqaqnwpxzbycbhibr.supabase.co";
+
+const SUPABASE_KEY =
+  "sb_publishable_HwuMFYV3OWCyJq2wAMDtZw_ut4zTlr8";
+
+/*
+  This is the public publishable key,
+  NOT a secret/service-role key.
+
+  Supabase RLS policies must remain enabled.
+*/
+
+const $ = id => document.getElementById(id);
+const wait = ms =>
+  new Promise(resolve => setTimeout(resolve,ms));
+
+/* ==================================================
+   COURSE CONTENT
+   ================================================== */
+
+const rooms = {
+  ahmed:{
+    title:"ROOM 1 :: COLLEGE ALGEBRA",
+    professor:"College Algebra · Professor Ahmed",
+    workingTitle:"Strong Scaffolding",
+    working:"Professor Ahmed has built a highly structured course with short videos, guided examples, interactive problems, and practice quizzes. Students have clear support for working through each new concept.",
+    notTitle:"Students' Perception of Their Math Abilities",
+    not:"Many students enter the course already convinced they're “not math people.” They speed through videos, skip practice, and jump straight to quizzes. The work that could help them build confidence and ability is the very work they don't want to do.",
+    challenge:"Keep the support students need—but how can you make them WANT to work through the learning that helps them become “math people”?",
+    question:"How could you use perceptual, divergent, empathic, or epistemic curiosity to make students want to engage with the math?",
+    lamp:"lampAlgebra"
+  },
+
+  vargas:{
+    title:"ROOM 2 :: WRITING & RHETORIC",
+    professor:"Research and Rhetoric · Dr. Vargas",
+    workingTitle:"Thoughtful AI Integration",
+    working:"Dr. Vargas has designed assignments that use generative AI rather than ban it. Students analyze AI-generated drafts, critique its reasoning, and consider where AI-generated writing—and their own writing—could be stronger.",
+    notTitle:"Students Aren't Building Their Own Writing Skills",
+    not:"Many students still use AI to generate polished essays, make a few changes, and submit them. They're producing finished writing without doing enough of the writing themselves to build their ability to craft and construct sentences that argue, explain, interpret, question, and communicate complex ideas.",
+    challenge:"We are all writers in progress. How can Dr. Vargas make students WANT to learn and practice the craft of writing—while still keeping AI in the picture?",
+    question:"How could you use perceptual, divergent, empathic, or epistemic curiosity to help students become more curious about what makes writing work, what doesn't, and how both their writing and AI-generated writing can be revised to communicate more clearly and thoughtfully?",
+    lamp:"lampWriting"
+  },
+
+  reynolds:{
+    title:"ROOM 3 :: ETHICS & SOCIAL RESPONSIBILITY",
+    professor:"Ethics and Social Responsibility · Dr. Reynolds",
+    workingTitle:"Multiple Perspectives",
+    working:"Dr. Reynolds asks students to examine contemporary issues through competing ethical frameworks. Readings and case studies present multiple perspectives, and discussions are designed to encourage reflection rather than debate.",
+    notTitle:"Strong Reactions Are Shutting Down Inquiry",
+    not:"Some students perceive the course as biased or disengage when they encounter ideas that conflict with their own views. Instead of becoming more interested in why people see an issue differently, they may withdraw from the conversation or focus only on completing the factual work.",
+    challenge:"Keep the complexity—but how can you make students WANT to stay curious when an idea challenges what they already think or believe?",
+    question:"How could you use perceptual, divergent, empathic, or epistemic curiosity to help students become curious about different perspectives while continuing to examine and develop their own?",
+    lamp:"lampEthics"
+  },
+
+  lin:{
+    title:"ROOM 4 :: INTRODUCTION TO PSYCHOLOGY",
+    professor:"Introduction to Psychology · Professor Lin",
+    workingTitle:"A Strong, Engaging Course",
+    working:"Professor Lin inherited a well-designed asynchronous psychology course. Students engage with interesting examples, cases, and activities that connect concepts like perception, memory, decision-making, and social behavior to their own lives.",
+    notTitle:"The Discussion Board",
+    not:"The course requires a weekly discussion, and it's a ghost town for curiosity. Students answer the prompt, make the required replies, and move on. Posts and responses are predictable and boring for everyone involved.",
+    challenge:"The weekly discussion has to stay—but the way students experience it can change. How can Lin make the discussion something students WANT to enter and return to—or, at the very least, make it less boring for everyone (including Lin)?",
+    question:"How could you use perceptual, divergent, empathic, or epistemic curiosity—and the psychology content itself—to create discussions that generate responses worth reading, thinking about, and responding to?",
+    lamp:"lampPsych"
+  }
 };
 
-const progress={};
+/* ==================================================
+   LOCAL GAME STATE
+   ================================================== */
+
+/*
+  Local state controls the participant's own
+  room progress and green door lamps.
+
+  Supabase controls the SHARED Hall energy number.
+*/
+
+const progress = {};
+
 Object.keys(rooms).forEach(id=>{
-progress[id]=Array.from({length:3},()=>({type:"",text:"",submitted:false}));
+  progress[id] = Array.from(
+    {length:3},
+    ()=>({
+      type:"",
+      text:"",
+      submitted:false
+    })
+  );
 });
 
-let currentRoom=null;
-let currentMove=0;
-let transitioning=false;
-let reviving=false;
-let ambiencePaused=false;
-let eggTimer=null;
-let eggGeneration=0;
+let currentRoom = null;
+let currentMove = 0;
+let transitioning = false;
+let reviving = false;
+let ambiencePaused = false;
+let eggTimer = null;
+let eggGeneration = 0;
+
+let sharedEnergy = null;
+let energyRefreshBusy = false;
+
+/* ==================================================
+   SUPABASE REQUESTS
+   ================================================== */
+
+function supabaseHeaders(){
+  return {
+    "apikey":SUPABASE_KEY,
+    "Authorization":"Bearer "+SUPABASE_KEY,
+    "Content-Type":"application/json"
+  };
+}
+
+/*
+  Read only the PUBLIC collective_energy table.
+  Never request the private curiosity_moves table.
+*/
+
+async function refreshCollectiveEnergy(){
+  if(energyRefreshBusy)return;
+
+  energyRefreshBusy = true;
+
+  try{
+    const response = await fetch(
+      SUPABASE_URL +
+      "/rest/v1/collective_energy" +
+      "?select=total_moves&id=eq.1",
+      {
+        method:"GET",
+        headers:supabaseHeaders(),
+        cache:"no-store"
+      }
+    );
+
+    if(!response.ok){
+      throw new Error(
+        "Energy request failed: "+response.status
+      );
+    }
+
+    const rows = await response.json();
+
+    if(
+      !Array.isArray(rows) ||
+      rows.length !== 1 ||
+      typeof rows[0].total_moves !== "number"
+    ){
+      throw new Error("Energy row unavailable");
+    }
+
+    sharedEnergy = rows[0].total_moves;
+
+    $("collectiveEnergy").textContent =
+      sharedEnergy.toLocaleString();
+
+    $("energyStatus").textContent =
+      "COLLECTIVE ENERGY · SHARED LIVE TOTAL";
+
+  }catch(error){
+    console.warn("Collective energy:",error);
+
+    /*
+      Don't replace a previously valid total
+      with a misleading zero.
+    */
+    if(sharedEnergy === null){
+      $("collectiveEnergy").textContent = "—";
+    }
+
+    $("energyStatus").textContent =
+      "ENERGY CONNECTION UNAVAILABLE";
+  }finally{
+    energyRefreshBusy = false;
+  }
+}
+
+/*
+  Save one written response.
+
+  We intentionally do NOT request the inserted row
+  back from Supabase. Participants have INSERT
+  permission, not SELECT permission.
+*/
+
+async function saveCuriosityMove(roomId,move){
+  const response = await fetch(
+    SUPABASE_URL + "/rest/v1/curiosity_moves",
+    {
+      method:"POST",
+      headers:{
+        ...supabaseHeaders(),
+        "Prefer":"return=minimal"
+      },
+      body:JSON.stringify({
+        room_id:roomId,
+        curiosity_type:move.type.toLowerCase(),
+        move_text:move.text.trim()
+      })
+    }
+  );
+
+  if(!response.ok){
+    let detail = "";
+
+    try{
+      const errorData = await response.json();
+      detail = errorData.message || "";
+    }catch(error){}
+
+    throw new Error(
+      "Submission failed (" +
+      response.status +
+      ")" +
+      (detail ? ": "+detail : "")
+    );
+  }
+
+  return true;
+}
+
+/* ==================================================
+   SOUND
+   ================================================== */
 
 function playSound(id,volume=1){
-const sound=$(id);
-if(!sound)return;
-try{
-sound.pause();
-sound.currentTime=0;
-sound.volume=volume;
-sound.play().catch(()=>{});
-}catch(e){}
+  const sound = $(id);
+  if(!sound)return;
+
+  try{
+    sound.pause();
+    sound.currentTime = 0;
+    sound.volume = volume;
+    sound.play().catch(()=>{});
+  }catch(error){}
 }
-function clickFeedback(){playSound("clickSound",.5)}
+
+function clickFeedback(){
+  playSound("clickSound",.5);
+}
+
 function playAmbience(){
-if(ambiencePaused||!$("hallScene").classList.contains("active"))return;
-const sound=$("hallAmbience");
-sound.volume=.24;
-sound.play().catch(()=>{});
-}
-function stopAmbience(){$("hallAmbience").pause()}
+  if(
+    ambiencePaused ||
+    !$("hallScene").classList.contains("active")
+  )return;
 
-/* WELCOME */
+  const sound = $("hallAmbience");
+  sound.volume = .24;
+  sound.play().catch(()=>{});
+}
+
+function stopAmbience(){
+  $("hallAmbience").pause();
+}
+
+/* ==================================================
+   WELCOME
+   ================================================== */
+
 $("enterHallButton").addEventListener("click",()=>{
-clickFeedback();
-$("welcomeScreen").classList.add("hidden");
-playAmbience();
+  clickFeedback();
+  $("welcomeScreen").classList.add("hidden");
+  playAmbience();
+  refreshCollectiveEnergy();
 });
 
-/* AMBIENCE */
+/* ==================================================
+   AMBIENCE
+   ================================================== */
+
 $("ambienceToggle").addEventListener("click",()=>{
-clickFeedback();
-ambiencePaused=!ambiencePaused;
-$("ambienceToggle").textContent=ambiencePaused?"▶ Resume Ambience":"⏸ Pause Ambience";
-if(ambiencePaused)stopAmbience();
-else playAmbience();
+  clickFeedback();
+
+  ambiencePaused = !ambiencePaused;
+
+  $("ambienceToggle").textContent =
+    ambiencePaused
+      ? "▶ Resume Ambience"
+      : "⏸ Pause Ambience";
+
+  if(ambiencePaused){
+    stopAmbience();
+  }else{
+    playAmbience();
+  }
 });
 
-/* EASTER EGG POPUPS */
-function showEgg(message,title="Curiosity University — System Message",delayedMessage=""){
-eggGeneration++;
-const generation=eggGeneration;
-clearTimeout(eggTimer);
-$("eggTitle").textContent=title;
-$("eggText").textContent=message;
-$("eggPopup").classList.add("show");
+/* ==================================================
+   EASTER EGG POPUPS
+   ================================================== */
 
-if(delayedMessage){
-const extra=document.createElement("span");
-extra.className="delayed-line";
-extra.textContent=delayedMessage;
-$("eggText").appendChild(extra);
-eggTimer=setTimeout(()=>{
-if(generation===eggGeneration&&$("eggPopup").classList.contains("show")){
-extra.classList.add("visible");
+function showEgg(
+  message,
+  title="Curiosity University — System Message",
+  delayedMessage=""
+){
+  eggGeneration++;
+  const generation = eggGeneration;
+
+  clearTimeout(eggTimer);
+
+  $("eggTitle").textContent = title;
+  $("eggText").textContent = message;
+  $("eggPopup").classList.add("show");
+
+  if(delayedMessage){
+    const extra = document.createElement("span");
+    extra.className = "delayed-line";
+    extra.textContent = delayedMessage;
+    $("eggText").appendChild(extra);
+
+    eggTimer = setTimeout(()=>{
+      if(
+        generation === eggGeneration &&
+        $("eggPopup").classList.contains("show")
+      ){
+        extra.classList.add("visible");
+      }
+    },1000);
+  }
 }
-},1000);
-}
-}
+
 function closeEgg(){
-eggGeneration++;
-clearTimeout(eggTimer);
-$("eggPopup").classList.remove("show");
+  eggGeneration++;
+  clearTimeout(eggTimer);
+  $("eggPopup").classList.remove("show");
 }
-$("closeEgg").addEventListener("click",()=>{clickFeedback();closeEgg()});
-$("eggPopup").addEventListener("click",e=>{
-if(e.target===$("eggPopup"))closeEgg();
+
+$("closeEgg").addEventListener("click",()=>{
+  clickFeedback();
+  closeEgg();
 });
-document.addEventListener("keydown",e=>{
-if(e.key==="Escape")closeEgg();
+
+$("eggPopup").addEventListener("click",event=>{
+  if(event.target === $("eggPopup")){
+    closeEgg();
+  }
+});
+
+document.addEventListener("keydown",event=>{
+  if(event.key === "Escape"){
+    closeEgg();
+  }
 });
 
 /* COMPUTER */
 $("computerEgg").addEventListener("click",()=>{
-clickFeedback();
-showEgg("I see you're curious...","Curiosity University — System Message","GOOD.");
+  clickFeedback();
+  showEgg(
+    "I see you're curious...",
+    "Curiosity University — System Message",
+    "GOOD."
+  );
 });
 
 /* CLOCK */
 $("clockEgg").addEventListener("click",()=>{
-clickFeedback();
-const hands=$("clockHands");
-hands.classList.remove("spinning");
-void hands.offsetWidth;
-hands.classList.add("spinning");
-showEgg("Curiosity has no expiration date.","A Message From the Clock");
-setTimeout(()=>hands.classList.remove("spinning"),1800);
+  clickFeedback();
+
+  const hands = $("clockHands");
+  hands.classList.remove("spinning");
+  void hands.offsetWidth;
+  hands.classList.add("spinning");
+
+  showEgg(
+    "Curiosity has no expiration date.",
+    "A Message From the Clock"
+  );
+
+  setTimeout(()=>{
+    hands.classList.remove("spinning");
+  },1800);
 });
 
-/* SPIDER */
+/* NEW SPIDER */
 $("webEgg").addEventListener("click",()=>{
-clickFeedback();
-const spider=$("spider");
-spider.classList.remove("scurry");
-void spider.offsetWidth;
-spider.classList.add("scurry");
-setTimeout(()=>{
-if($("hallScene").classList.contains("active")){
-showEgg("You found a web of possibilities.","Something in the Cobwebs");
-}
-},2100);
-setTimeout(()=>spider.classList.remove("scurry"),2700);
+  clickFeedback();
+
+  const spider = $("spider");
+  spider.classList.remove("scurry");
+  void spider.offsetWidth;
+  spider.classList.add("scurry");
+
+  setTimeout(()=>{
+    if(
+      $("hallScene").classList.contains("active")
+    ){
+      showEgg(
+        "You found a web of possibilities.",
+        "Something in the Cobwebs"
+      );
+    }
+  },2100);
+
+  setTimeout(()=>{
+    spider.classList.remove("scurry");
+  },2700);
 });
 
-/* PUMPKIN */
+/* HALL PUMPKIN */
 $("pumpkinEgg").addEventListener("click",()=>{
-clickFeedback();
-playSound("scaryLaugh",.9);
-const flash=$("pumpkinFlash");
-flash.classList.remove("flash");
-void flash.offsetWidth;
-flash.classList.add("flash");
-setTimeout(()=>flash.classList.remove("flash"),2100);
+  clickFeedback();
+  playSound("scaryLaugh",.9);
+
+  const flash = $("pumpkinFlash");
+  flash.classList.remove("flash");
+  void flash.offsetWidth;
+  flash.classList.add("flash");
+
+  setTimeout(()=>{
+    flash.classList.remove("flash");
+  },2100);
 });
 
 /* COFFEE CUP */
 $("coffeeEgg").addEventListener("click",()=>{
-clickFeedback();
-showEgg(
-"CAFFEINE LEVELS: CRITICAL",
-"Curiosity University — Coffee Status",
-"Fueled by caffeine, driven by curiosity."
-);
+  clickFeedback();
+
+  showEgg(
+    "CAFFEINE LEVELS: CRITICAL",
+    "Curiosity University — Coffee Status",
+    "Fueled by caffeine, driven by curiosity."
+  );
 });
 
-/* SCENES */
+/* ==================================================
+   SCENES AND HALL
+   ================================================== */
+
 function showScene(id){
-document.querySelectorAll(".scene").forEach(el=>el.classList.remove("active"));
-$(id).classList.add("active");
+  document.querySelectorAll(".scene").forEach(el=>{
+    el.classList.remove("active");
+  });
+
+  $(id).classList.add("active");
 }
+
 function updateHall(){
-let total=0;
-Object.keys(rooms).forEach(id=>{
-const count=progress[id].filter(move=>move.submitted).length;
-total+=count;
-$(rooms[id].lamp).classList.toggle("completed",count>0);
-});
-$("collectiveEnergy").textContent=total;
+  /*
+    Green lamps reflect the current participant's
+    completed rooms, not other people's work.
+  */
+
+  Object.keys(rooms).forEach(id=>{
+    const count = progress[id].filter(
+      move=>move.submitted
+    ).length;
+
+    $(rooms[id].lamp).classList.toggle(
+      "completed",
+      count>0
+    );
+  });
+
+  /*
+    Do not overwrite the shared energy total
+    with local progress.
+  */
 }
+
+/* ==================================================
+   ENTER ROOM
+   ================================================== */
 
 async function enterRoom(id){
-if(transitioning||reviving)return;
-transitioning=true;
-currentRoom=id;
-clickFeedback();
-stopAmbience();
-closeEgg();
+  if(transitioning || reviving)return;
 
-const hotspot=document.querySelector('[data-room="'+id+'"]');
-const rect=hotspot.getBoundingClientRect();
-const hallRect=$("hallStage").getBoundingClientRect();
-const centerX=(rect.left+rect.width/2-hallRect.left)/hallRect.width;
-const centerY=(rect.top+rect.height/2-hallRect.top)/hallRect.height;
-$("hallStage").style.transformOrigin=(centerX*100)+"% "+(centerY*100)+"%";
-$("hallStage").classList.add("approach");
+  transitioning = true;
+  currentRoom = id;
 
-await wait(850);
-$("doorPanel").src=id+"-door-panel.png";
-$("transitionStage").classList.remove("open","push");
-$("transitionFade").classList.remove("visible");
-showScene("doorTransition");
-$("hallStage").classList.remove("approach");
-$("hallStage").style.transformOrigin="50% 50%";
+  clickFeedback();
+  stopAmbience();
+  closeEgg();
 
-await wait(250);
-playSound("doorCreak",.8);
-$("transitionStage").classList.add("open");
-await wait(1600);
-playSound("airWhoosh",.8);
-$("transitionStage").classList.add("push");
-await wait(650);
-$("transitionFade").classList.add("visible");
-await wait(500);
-renderRoom();
-showScene("roomScene");
-playSound("roomEntry",.65);
-$("transitionFade").classList.remove("visible");
-transitioning=false;
+  const hotspot = document.querySelector(
+    '[data-room="'+id+'"]'
+  );
+
+  const rect = hotspot.getBoundingClientRect();
+  const hallRect =
+    $("hallStage").getBoundingClientRect();
+
+  const centerX =
+    (rect.left+rect.width/2-hallRect.left) /
+    hallRect.width;
+
+  const centerY =
+    (rect.top+rect.height/2-hallRect.top) /
+    hallRect.height;
+
+  $("hallStage").style.transformOrigin =
+    (centerX*100)+"% "+(centerY*100)+"%";
+
+  $("hallStage").classList.add("approach");
+
+  await wait(850);
+
+  $("doorPanel").src = id+"-door-panel.png";
+
+  $("transitionStage").classList.remove(
+    "open","push"
+  );
+
+  $("transitionFade").classList.remove("visible");
+
+  showScene("doorTransition");
+
+  $("hallStage").classList.remove("approach");
+  $("hallStage").style.transformOrigin = "50% 50%";
+
+  await wait(250);
+
+  playSound("doorCreak",.8);
+  $("transitionStage").classList.add("open");
+
+  await wait(1600);
+
+  playSound("airWhoosh",.8);
+  $("transitionStage").classList.add("push");
+
+  await wait(650);
+
+  $("transitionFade").classList.add("visible");
+
+  await wait(500);
+
+  renderRoom();
+  showScene("roomScene");
+  playSound("roomEntry",.65);
+
+  $("transitionFade").classList.remove("visible");
+
+  transitioning = false;
 }
-document.querySelectorAll(".door-hotspot").forEach(button=>{
-button.addEventListener("click",()=>enterRoom(button.dataset.room));
-});
+
+document.querySelectorAll(".door-hotspot").forEach(
+  button=>{
+    button.addEventListener("click",()=>{
+      enterRoom(button.dataset.room);
+    });
+  }
+);
+
+/* ==================================================
+   RETURN TO HALL
+   ================================================== */
 
 function returnHall(){
-if(transitioning||reviving)return;
-clickFeedback();
-$("successPopup").classList.remove("show");
-$("reviewPopup").classList.remove("show");
-updateHall();
-showScene("hallScene");
-playAmbience();
+  if(transitioning || reviving)return;
+
+  clickFeedback();
+
+  $("successPopup").classList.remove("show");
+  $("reviewPopup").classList.remove("show");
+
+  updateHall();
+  showScene("hallScene");
+  playAmbience();
+  refreshCollectiveEnergy();
 }
 
-/* ROOM RENDERING */
-function setText(id,text){$(id).textContent=text}
+/* ==================================================
+   ROOM CONTENT
+   ================================================== */
+
+function setText(id,text){
+  $(id).textContent = text;
+}
+
 function makePanel(id,title,body){
-$(id).replaceChildren();
-const strong=document.createElement("strong");
-strong.textContent=title;
-const paragraph=document.createElement("p");
-paragraph.textContent=body;
-$(id).append(strong,paragraph);
+  $(id).replaceChildren();
+
+  const strong = document.createElement("strong");
+  strong.textContent = title;
+
+  const paragraph = document.createElement("p");
+  paragraph.textContent = body;
+
+  $(id).append(strong,paragraph);
 }
+
 function renderRoom(){
-const room=rooms[currentRoom];
-setText("courseTitle",room.title);
-setText("courseProfessor",room.professor);
-makePanel("workingText",room.workingTitle,room.working);
-makePanel("notWorkingText",room.notTitle,room.not);
-makePanel("challengeText",room.challenge,room.question);
-$("challengeText").classList.add("challenge");
-const moves=progress[currentRoom];
-const next=moves.findIndex(move=>!move.submitted);
-currentMove=next===-1?2:next;
-renderMoves();
-updateGenerator();
-$("successPopup").classList.remove("show");
+  const room = rooms[currentRoom];
+
+  setText("courseTitle",room.title);
+  setText("courseProfessor",room.professor);
+
+  makePanel(
+    "workingText",
+    room.workingTitle,
+    room.working
+  );
+
+  makePanel(
+    "notWorkingText",
+    room.notTitle,
+    room.not
+  );
+
+  makePanel(
+    "challengeText",
+    room.challenge,
+    room.question
+  );
+
+  $("challengeText").classList.add("challenge");
+
+  const moves = progress[currentRoom];
+
+  const next = moves.findIndex(
+    move=>!move.submitted
+  );
+
+  currentMove = next===-1 ? 2 : next;
+
+  renderMoves();
+  updateGenerator();
+
+  $("successPopup").classList.remove("show");
 }
+
+/* ==================================================
+   CURIOSITY MOVE TABS
+   ================================================== */
 
 function renderMoves(){
-const moves=progress[currentRoom];
-$("moveTabs").replaceChildren();
-$("movePanes").replaceChildren();
-moves.forEach((move,index)=>{
-const tab=document.createElement("button");
-tab.className="move-tab"+(index===currentMove?" active":"")+(move.submitted?" submitted":"");
-tab.textContent="MOVE "+(index+1)+(move.submitted?" ✓":"");
-tab.addEventListener("click",()=>{
-if(reviving)return;
-clickFeedback();
-currentMove=index;
-renderMoves();
-});
-$("moveTabs").appendChild(tab);
+  const moves = progress[currentRoom];
 
-const pane=document.createElement("div");
-pane.className="move-pane"+(index===currentMove?" active":"");
-pane.innerHTML=`
-<div class="move-form">
-<label>Which type of curiosity will you use?</label>
-<select aria-label="Curiosity type">
-<option value="">Select curiosity type...</option>
-<option value="Perceptual">Perceptual Curiosity</option>
-<option value="Divergent">Divergent Curiosity</option>
-<option value="Empathic">Empathic Curiosity</option>
-<option value="Epistemic">Epistemic Curiosity</option>
-</select>
-<label>What will you do to spark this curiosity?</label>
-<textarea placeholder="Describe your Curiosity Move..."></textarea>
-<div class="character-count">0 characters</div>
-</div>`;
-const select=pane.querySelector("select");
-const textarea=pane.querySelector("textarea");
-const count=pane.querySelector(".character-count");
-select.value=move.type;
-textarea.value=move.text;
-count.textContent=move.text.length+" characters";
-select.disabled=move.submitted;
-textarea.disabled=move.submitted;
-select.addEventListener("change",()=>{
-move.type=select.value;
-updateReviveButton();
-});
-textarea.addEventListener("input",()=>{
-move.text=textarea.value;
-count.textContent=move.text.length+" characters";
-updateReviveButton();
-});
-$("movePanes").appendChild(pane);
-});
-updateReviveButton();
+  $("moveTabs").replaceChildren();
+  $("movePanes").replaceChildren();
+
+  moves.forEach((move,index)=>{
+    const tab = document.createElement("button");
+
+    tab.className =
+      "move-tab" +
+      (index===currentMove ? " active" : "") +
+      (move.submitted ? " submitted" : "");
+
+    tab.textContent =
+      "MOVE "+(index+1)+
+      (move.submitted ? " ✓" : "");
+
+    tab.addEventListener("click",()=>{
+      if(reviving)return;
+
+      clickFeedback();
+      currentMove = index;
+      renderMoves();
+    });
+
+    $("moveTabs").appendChild(tab);
+
+    const pane = document.createElement("div");
+
+    pane.className =
+      "move-pane" +
+      (index===currentMove ? " active" : "");
+
+    pane.innerHTML = `
+      <div class="move-form">
+        <label>
+          Which type of curiosity will you use?
+        </label>
+
+        <select aria-label="Curiosity type">
+          <option value="">
+            Select curiosity type...
+          </option>
+          <option value="Perceptual">
+            Perceptual Curiosity
+          </option>
+          <option value="Divergent">
+            Divergent Curiosity
+          </option>
+          <option value="Empathic">
+            Empathic Curiosity
+          </option>
+          <option value="Epistemic">
+            Epistemic Curiosity
+          </option>
+        </select>
+
+        <label>
+          What will you do to spark this curiosity?
+        </label>
+
+        <textarea
+          maxlength="2000"
+          placeholder="Describe your Curiosity Move..."
+        ></textarea>
+
+        <div class="character-count">
+          0 characters
+        </div>
+      </div>
+    `;
+
+    const select = pane.querySelector("select");
+    const textarea = pane.querySelector("textarea");
+    const count =
+      pane.querySelector(".character-count");
+
+    select.value = move.type;
+    textarea.value = move.text;
+
+    count.textContent =
+      move.text.length+" characters";
+
+    select.disabled = move.submitted;
+    textarea.disabled = move.submitted;
+
+    select.addEventListener("change",()=>{
+      move.type = select.value;
+      updateReviveButton();
+    });
+
+    textarea.addEventListener("input",()=>{
+      move.text = textarea.value;
+
+      count.textContent =
+        move.text.length+" characters";
+
+      updateReviveButton();
+    });
+
+    $("movePanes").appendChild(pane);
+  });
+
+  updateReviveButton();
 }
+
+/* ==================================================
+   REVIVE BUTTON
+   ================================================== */
 
 function updateReviveButton(){
-const move=progress[currentRoom][currentMove];
-const ready=!reviving&&!move.submitted&&!!move.type&&move.text.trim().length>=6;
-$("reviveButton").disabled=!ready;
-$("reviveButton").classList.toggle("ready",ready);
-const completed=progress[currentRoom].filter(m=>m.submitted).length;
+  if(!currentRoom)return;
 
-if(reviving){
-$("footerMessage").textContent="Restoring curiosity... stand by!";
-}else if(completed===3){
-$("footerMessage").textContent="All three Curiosity Moves restored!";
-}else if(move.submitted){
-$("footerMessage").textContent="This move has been submitted. Choose another tab to add an idea.";
-}else if(ready){
-$("footerMessage").textContent="Ready to revive curiosity!";
-}else{
-$("footerMessage").textContent=completed===0
-?"Complete one Curiosity Move to unlock the room."
-:"You can return to the Hall or submit another Curiosity Move.";
+  const move =
+    progress[currentRoom][currentMove];
+
+  const ready =
+    !reviving &&
+    !move.submitted &&
+    !!move.type &&
+    move.text.trim().length>=6 &&
+    move.text.length<=2000;
+
+  $("reviveButton").disabled = !ready;
+  $("reviveButton").classList.toggle(
+    "ready",
+    ready
+  );
+
+  const completed =
+    progress[currentRoom].filter(
+      move=>move.submitted
+    ).length;
+
+  if(reviving){
+    $("footerMessage").textContent =
+      "Saving your Curiosity Move... stand by!";
+  }else if(completed===3){
+    $("footerMessage").textContent =
+      "All three Curiosity Moves restored!";
+  }else if(move.submitted){
+    $("footerMessage").textContent =
+      "This move has been submitted. Choose another tab to add an idea.";
+  }else if(ready){
+    $("footerMessage").textContent =
+      "Ready to revive curiosity!";
+  }else{
+    $("footerMessage").textContent =
+      completed===0
+        ? "Complete one Curiosity Move to unlock the room."
+        : "You can return to the Hall or submit another Curiosity Move.";
+  }
+
+  $("persistentHallButton").classList.toggle(
+    "visible",
+    completed>0 && !reviving
+  );
 }
-$("persistentHallButton").classList.toggle("visible",completed>0&&!reviving);
-}
+
+/* ==================================================
+   GENERATOR
+   ================================================== */
 
 function updateGenerator(){
-const completed=progress[currentRoom].filter(m=>m.submitted).length;
-$("pumpkin").className=completed?"level"+completed:"";
-$("pumpkinZone").classList.toggle("overload",completed===3);
-$("needle").style.transform="rotate("+(-72+completed*48)+"deg)";
-$("roomEnergy").textContent="ENERGY: "+completed+" / 3";
-$("doorStatus").textContent=completed>0?"DOOR: UNLOCKED":"DOOR: LOCKED";
-$("doorStatus").classList.toggle("unlocked",completed>0);
-updateHall();
+  if(!currentRoom)return;
+
+  const completed =
+    progress[currentRoom].filter(
+      move=>move.submitted
+    ).length;
+
+  $("pumpkin").className =
+    completed ? "level"+completed : "";
+
+  $("pumpkinZone").classList.toggle(
+    "overload",
+    completed===3
+  );
+
+  $("needle").style.transform =
+    "rotate("+(-72+completed*48)+"deg)";
+
+  $("roomEnergy").textContent =
+    "ENERGY: "+completed+" / 3";
+
+  $("doorStatus").textContent =
+    completed>0
+      ? "DOOR: UNLOCKED"
+      : "DOOR: LOCKED";
+
+  $("doorStatus").classList.toggle(
+    "unlocked",
+    completed>0
+  );
+
+  updateHall();
 }
 
-/* REVIVE WITH 1.8 SECOND DELAY */
+/* ==================================================
+   REVIVE — SAVE FIRST, CELEBRATE SECOND
+   ================================================== */
+
 async function reviveMove(){
-if(reviving||transitioning)return;
-const move=progress[currentRoom][currentMove];
-if(move.submitted||!move.type||move.text.trim().length<6)return;
+  if(reviving || transitioning)return;
 
-reviving=true;
-clickFeedback();
-$("reviveButton").disabled=true;
-$("reviveButton").classList.remove("ready");
+  const move =
+    progress[currentRoom][currentMove];
 
-move.submitted=true;
-playSound("generatorSound",.9);
-updateGenerator();
-updateReviveButton();
+  if(
+    move.submitted ||
+    !move.type ||
+    move.text.trim().length<6 ||
+    move.text.length>2000
+  )return;
 
-await wait(1800);
+  reviving = true;
 
-const completed=progress[currentRoom].filter(m=>m.submitted).length;
-$("successMessage").textContent=
-"Curiosity Move "+completed+" has been submitted. Your course has earned "+completed+" of 3 possible energy units.";
-$("addAnotherButton").style.display=completed<3?"inline-block":"none";
+  clickFeedback();
 
-reviving=false;
-renderMoves();
-updateGenerator();
-$("successPopup").classList.add("show");
+  $("reviveButton").disabled = true;
+  $("reviveButton").classList.remove("ready");
+
+  updateReviveButton();
+
+  /*
+    Save to Supabase BEFORE awarding energy.
+  */
+
+  try{
+    await saveCuriosityMove(currentRoom,move);
+
+  }catch(error){
+    console.error("REVIVE submission:",error);
+
+    reviving = false;
+    updateReviveButton();
+
+    $("footerMessage").textContent =
+      "Could not save. Please try REVIVE! again.";
+
+    alert(
+      "Curiosity Move not saved.\n\n" +
+      "Please check your connection and try again.\n\n" +
+      "Technical detail: "+error.message
+    );
+
+    return;
+  }
+
+  /*
+    Supabase accepted the submission.
+    Now the room can celebrate.
+  */
+
+  move.submitted = true;
+
+  playSound("generatorSound",.9);
+
+  updateGenerator();
+  updateReviveButton();
+
+  /*
+    The database trigger increases shared energy.
+    Fetch the updated number.
+  */
+  refreshCollectiveEnergy();
+
+  /*
+    Keep the original 1.8-second animation delay.
+  */
+  await wait(1800);
+
+  const completed =
+    progress[currentRoom].filter(
+      move=>move.submitted
+    ).length;
+
+  $("successMessage").textContent =
+    "Curiosity Move "+completed+
+    " has been submitted. Your course has earned "+
+    completed+" of 3 possible energy units.";
+
+  $("addAnotherButton").style.display =
+    completed<3 ? "inline-block" : "none";
+
+  reviving = false;
+
+  renderMoves();
+  updateGenerator();
+
+  $("successPopup").classList.add("show");
 }
 
-$("reviveButton").addEventListener("click",reviveMove);
-$("persistentHallButton").addEventListener("click",returnHall);
-$("successHallButton").addEventListener("click",returnHall);
+/* ==================================================
+   BUTTON EVENTS
+   ================================================== */
+
+$("reviveButton").addEventListener(
+  "click",
+  reviveMove
+);
+
+$("persistentHallButton").addEventListener(
+  "click",
+  returnHall
+);
+
+$("successHallButton").addEventListener(
+  "click",
+  returnHall
+);
+
 $("addAnotherButton").addEventListener("click",()=>{
-clickFeedback();
-$("successPopup").classList.remove("show");
-const next=progress[currentRoom].findIndex(m=>!m.submitted);
-if(next>=0)currentMove=next;
-renderMoves();
-});
-$("reviewButton").addEventListener("click",()=>{
-clickFeedback();
-$("reviewPopup").classList.add("show");
-});
-$("closeReview").addEventListener("click",()=>{
-clickFeedback();
-$("reviewPopup").classList.remove("show");
+  clickFeedback();
+
+  $("successPopup").classList.remove("show");
+
+  const next =
+    progress[currentRoom].findIndex(
+      move=>!move.submitted
+    );
+
+  if(next>=0){
+    currentMove = next;
+  }
+
+  renderMoves();
 });
 
-/* START FRESH ON EACH PAGE LOAD */
+$("reviewButton").addEventListener("click",()=>{
+  clickFeedback();
+  $("reviewPopup").classList.add("show");
+});
+
+$("closeReview").addEventListener("click",()=>{
+  clickFeedback();
+  $("reviewPopup").classList.remove("show");
+});
+
+/* ==================================================
+   STARTUP AND SHARED ENERGY REFRESH
+   ================================================== */
+
+/*
+  The local room progress starts fresh on each
+  page load, as in the original game.
+
+  The collective energy total remains stored
+  in Supabase across participants and sessions.
+*/
+
 updateHall();
+
+/*
+  Initial load and regular updates.
+  Polling every five seconds keeps the setup
+  simple without needing Realtime configuration.
+*/
+
+refreshCollectiveEnergy();
+
+setInterval(()=>{
+  if(!document.hidden){
+    refreshCollectiveEnergy();
+  }
+},5000);
+
+document.addEventListener(
+  "visibilitychange",
+  ()=>{
+    if(!document.hidden){
+      refreshCollectiveEnergy();
+    }
+  }
+);
+
 </script>
 </body>
 </html>
